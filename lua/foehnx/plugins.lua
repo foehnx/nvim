@@ -62,5 +62,9 @@ require('packer').startup(
     -- Mini toolkit
     ---------------
     use { 'echasnovski/mini.nvim' }
+
+    -- Which Key
+    ------------
+    use 'folke/which-key.nvim'
   end
 )

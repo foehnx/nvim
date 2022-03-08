@@ -11,4 +11,5 @@ require('foehnx/mini')
 require('foehnx/treesitter')
 require('foehnx/cleanbuffers')
 require('foehnx/toggleterm')
+require('foehnx/whichkey')
 
