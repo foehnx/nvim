@@ -41,11 +41,7 @@ local lspconfig = require('lspconfig')
 lspconfig['clangd'].setup {
   capabilities = capabilities,
   on_attach=custom_attach,
-  cmd = {
-    "/usr/bin/clangd-12",
-    "--background-index",
-    "--compile-commands-dir=/home/philippfoehn/aircam/build/host_aircam",
-  },
+  cmd = {"/usr/bin/clangd-12"},
   filetypes = {"c", "cc", "cpp", "h", "hpp", "objc", "objcpp"},
 }
 

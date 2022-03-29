@@ -4,8 +4,12 @@ vim.opt.guifont="MesloLGS NF:h9"
 
 -- Theme
 -- vim.g.material_style = 'deep ocean'
-vim.g.material_theme_style = 'ocean'
-vim.cmd 'colorscheme material'
+-- vim.g.material_theme_style = 'ocean'
+-- vim.cmd 'colorscheme material'
+require('onedark').setup {
+  style='cool'
+}
+require('onedark').load()
 
 -- System
 vim.g.mapleader= ' '
@@ -46,6 +50,6 @@ vim.opt.splitright = true
 -- For coding convenience
 vim.opt.cmdheight=1
 vim.opt.updatetime=100
-vim.opt.colorcolumn='101'
-vim.opt.signcolumn = "auto:2"
+-- vim.opt.colorcolumn='101'
+vim.opt.signcolumn = "auto:4"
 

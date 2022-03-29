@@ -39,7 +39,8 @@ require('packer').startup(
     --------
     -- use 'marko-cerovac/material.nvim'
     use {'kaicataldo/material.vim', branch='main'}
-    use 'nvim-lua/popup.nvim'
+    use 'navarasu/onedark.nvim'
+    -- use 'nvim-lua/popup.nvim'
 
     -- Tree
     -------
@@ -54,6 +55,7 @@ require('packer').startup(
     -- Git
     ------
     use 'f-person/git-blame.nvim'
+    use 'lewis6991/gitsigns.nvim'
 
     -- Terminal
     -----------
