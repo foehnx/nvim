@@ -31,6 +31,28 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
 
+vim.o.guifont = "MesloLGS Nerd Font Mono:h10"
+vim.g.neovide_floating_blur_amount_x = 10.0
+vim.g.neovide_floating_blur_amount_y = 10.0
+vim.g.neovide_hide_mouse_when_typing = true
+vim.g.neovide_cursor_animate_command_line = false
+
+vim.g.neovide_scale_factor = 0.9
+local change_scale_factor = function(delta)
+  vim.g.neovide_scale_factor = vim.g.neovide_scale_factor * delta
+end
+
+if vim.g.neovide then
+  vim.keymap.set('n', '<D-s>', ':w<CR>') -- Save
+  vim.keymap.set('v', '<D-c>', '"+y')    -- Copy
+  vim.keymap.set('n', '<D-v>', '"+P')    -- Paste normal mode
+  vim.keymap.set('v', '<D-v>', '"+P')    -- Paste visual mode
+  vim.keymap.set('c', '<D-v>', '<C-R>+') -- Paste command mode
+  vim.keymap.set('i', '<D-v>', '<C-R>+') -- Paste insert mode
+end
+
+
+
 --- Plugins -------------------------------------------------------------------
 require("lazy").setup({
   -- UI ---------------------
@@ -43,6 +65,7 @@ require("lazy").setup({
 			vim.cmd.colorscheme("catppuccin-mocha")
 		end,
 	},
+  { 'echasnovski/mini.icons', version = false },
   {
     "folke/which-key.nvim",
 		lazy = false,
@@ -87,20 +110,10 @@ require("lazy").setup({
       },
     },
   },
-  {
-    "ojroques/nvim-bufdel",
-    lazy=false,
-  },
-  {
-    "numToStr/Comment.nvim",
-    lazy=false,
-  },
-  {
-    "github/copilot.vim"
-  },
-  {
-    "AckslD/swenv.nvim",
-  },
+  { "ojroques/nvim-bufdel", lazy=false, },
+  { "numToStr/Comment.nvim", lazy=false, },
+  { "github/copilot.vim" },
+  { "nvim-pack/nvim-spectre", config=true, },
   {
     "nvim-zh/colorful-winsep.nvim",
     opts={
@@ -248,6 +261,13 @@ require("lazy").setup({
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
+  },
+  {
+    "ruifm/gitlinker.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    config=true,
   },
   -- LSP --------------------
 	{
@@ -410,53 +430,106 @@ vim.keymap.set("n", "gd", vim.lsp.buf.definition)
 vim.keymap.set("n", "gr", vim.lsp.buf.references)
 vim.keymap.set("n", "<C-I>", vim.lsp.buf.format)
 
-require("which-key").register({
-	["leader"] = { "<cmd>telescope.builtin.oldfiles", "Recent" },
-  w = { "<cmd>write<CR>", "Write" },
-  b = {
-    name="Buffer",
-    b = { "<cmd>BufDel<CR>", "Bye"},
-    a = { "<cmd>BufDelOthers<CR>", "Close All Others"},
-    j = { "<cmd>bnext<CR>", "Next"},
-    k = { "<cmd>bprevious<CR>", "Previous"},
-  },
-	e = {
-    name = "Explorer",
-    e = { "<cmd>Neotree filesystem reveal left<cr>", "Explorer" },
-    t = { "<cmd>Neotree filesystem reveal toggle left<cr>", "Explorer" },
-    b = { "<cmd>Neotree buffers reveal float<cr>", "Buffers" },
-  },
-	f = {
-    name = "Find",
-    f = { "<cmd>Telescope find_files<cr>", "Files" },
-    b = { "<cmd>Telescope buffers<cr>", "Buffers" },
-    -- g = { "<cmd>Telescope live_grep<cr>", "Grep" },
-    g = { require('telescope').extensions.live_grep_args.live_grep_args, "Grep" },
-    o = { "<cmd>Telescope oldfiles<cr>", "History" },
-    k = { "<cmd>Telescope keymaps<cr>", "Keymaps" },
-    r = { "<cmd>Telescope lsp_references<cr>", "References" },
-    d = { "<cmd>Telescope diagnostics bufnr=0<cr>", "Diagnostics" },
-  },
-	l = { "<cmd>LazyGit<CR>", "LazyGit" },
-	c = {
-		name = "Code",
-		a = { vim.lsp.buf.code_action, "Code Action" },
-    h = { "<cmd>ClangdSwitchSourceHeader<CR>", "Header/Source" },
-		f = {
-			function()
-				require("conform").format({
-					lsp_fallback = true,
-					async = false,
-					timeout_ms = 1000,
-				})
-			end,
-			"Format",
-		},
-	},
-	p = {
-		name = "Packages",
-		l = { "<cmd>Lazy<cr>", "Lazy" },
-		m = { "<cmd>Mason<cr>", "Mason" },
-	},
-}, { prefix = "<leader>" })
+vim.keymap.set("n", "c-=", function() change_scale_factor(1.2) end, { noremap = true, silent = true })
+vim.keymap.set("n", "c--", function() change_scale_factor(1/1.2) end, { noremap = true, silent = true })
 
+vim.keymap.set("n", "c-Left", ":resize -2<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "c-Right", ":resize +2<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "c-Up", ":vertical resize +2<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "c-Down", ":vertical resize -2<CR>", { noremap = true, silent = true })
+
+-- require("which-key").register({
+-- 	["leader"] = { "<cmd>Telescope buffers<cr>", "Buffers" },
+--   w = { "<cmd>write<CR>", "Write" },
+--   b = {
+--     name="Buffer",
+--     b = { "<cmd>BufDel<CR>", "Bye"},
+--     a = { "<cmd>BufDelOthers<CR>", "Close All Others"},
+--     j = { "<cmd>bnext<CR>", "Next"},
+--     k = { "<cmd>bprevious<CR>", "Previous"},
+--   },
+-- 	e = {
+--     name = "Explorer",
+--     e = { "<cmd>Neotree filesystem reveal left<cr>", "Explorer" },
+--     t = { "<cmd>Neotree filesystem reveal toggle left<cr>", "Explorer" },
+--     b = { "<cmd>Neotree buffers reveal float<cr>", "Buffers" },
+--   },
+-- 	f = {
+--     name = "Find",
+--     f = { "<cmd>Telescope find_files<cr>", "Files" },
+--     b = { "<cmd>Telescope buffers<cr>", "Buffers" },
+--     -- g = { "<cmd>Telescope live_grep<cr>", "Grep" },
+--     g = { require('telescope').extensions.live_grep_args.live_grep_args, "Grep" },
+--     o = { "<cmd>Telescope oldfiles<cr>", "History" },
+--     k = { "<cmd>Telescope keymaps<cr>", "Keymaps" },
+--     r = { "<cmd>Telescope lsp_references<cr>", "References" },
+--     d = { "<cmd>Telescope diagnostics bufnr=0<cr>", "Diagnostics" },
+--   },
+--   s = {
+--     name = "Replace",
+--     s = { require("spectre").toggle, "Toggle Spectre" },
+--     w = { function() require("spectre").open_visual({select_word=true}) end, "Search Word", mode="n"},
+--     p = { function() require("spectre").open_file_search({select_word=true}) end, "Search File", mode="n"},
+--   },
+-- 	l = { "<cmd>LazyGit<CR>", "LazyGit" },
+-- 	c = {
+-- 		name = "Code",
+-- 		a = { vim.lsp.buf.code_action, "Code Action" },
+--     h = { "<cmd>ClangdSwitchSourceHeader<CR>", "Header/Source" },
+-- 		f = {
+-- 			function()
+-- 				require("conform").format({
+-- 					lsp_fallback = true,
+-- 					async = false,
+-- 					timeout_ms = 1000,
+-- 				})
+-- 			end,
+-- 			"Format",
+-- 		},
+-- 	},
+-- 	p = {
+-- 		name = "Packages",
+-- 		l = { "<cmd>Lazy<cr>", "Lazy" },
+-- 		m = { "<cmd>Mason<cr>", "Mason" },
+-- 	},
+-- }, { prefix = "<leader>" })
+
+
+require("which-key").add({
+  { "<leader>b", group = "Buffer" },
+  { "<leader>ba", "<cmd>BufDelOthers<CR>", desc = "Close All Others" },
+  { "<leader>bb", "<cmd>BufDel<CR>", desc = "Bye" },
+  { "<leader>bj", "<cmd>bnext<CR>", desc = "Next" },
+  { "<leader>bk", "<cmd>bprevious<CR>", desc = "Previous" },
+  { "<leader>c", group = "Code" },
+  { "<leader>ca", vim.lsp.buf.code_action, desc = "Code Action" },
+  { "<leader>cf", function()
+			require("conform").format({
+				lsp_fallback = true,
+				async = false,
+				timeout_ms = 1000,
+			})
+		end, desc = "Format" },
+  { "<leader>ch", "<cmd>ClangdSwitchSourceHeader<CR>", desc = "Header/Source" },
+  { "<leader>e", group = "Neotree" },
+  { "<leader>eb", "<cmd>Neotree buffers reveal float<cr>", desc = "Buffers" },
+  { "<leader>ee", "<cmd>Neotree filesystem reveal left<cr>", desc = "Explorer" },
+  { "<leader>et", "<cmd>Neotree filesystem reveal toggle left<cr>", desc = "Explorer" },
+  { "<leader>f", group = "Find" },
+  { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Buffers" },
+  { "<leader>fd", "<cmd>Telescope diagnostics bufnr=0<cr>", desc = "Diagnostics" },
+  { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Files" },
+  { "<leader>fg", require('telescope').extensions.live_grep_args.live_grep_args, desc = "Grep" },
+  { "<leader>fk", "<cmd>Telescope keymaps<cr>", desc = "Keymaps" },
+  { "<leader>fo", "<cmd>Telescope oldfiles<cr>", desc = "History" },
+  { "<leader>fr", "<cmd>Telescope lsp_references<cr>", desc = "References" },
+  { "<leader>l", "<cmd>LazyGit<CR>", desc = "LazyGit" },
+  { "<leader>p", group = "Packages" },
+  { "<leader>pl", "<cmd>Lazy<cr>", desc = "Lazy" },
+  { "<leader>pm", "<cmd>Mason<cr>", desc = "Mason" },
+  { "<leader>s", group = "Replace" },
+  { "<leader>sp", function() require("spectre").open_file_search({select_word=true}) end, desc = "Search File" },
+  { "<leader>ss", require("spectre").toggle, desc = "Toggle Spectre" },
+  { "<leader>sw", function() require("spectre").open_visual({select_word=true}) end, desc = "Search Word" },
+  { "<leader>w", "<cmd>write<CR>", desc = "Write" },
+})
