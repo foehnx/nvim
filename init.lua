@@ -406,7 +406,20 @@ require("lazy").setup({
         end,
       })
     end
-  }
+  },
+  {
+    "hedyhli/outline.nvim",
+    lazy = true,
+    cmd = { "Outline", "OutlineOpen" },
+    opts = {
+      outline_window = {
+        auto_close = true,
+        auto_jump = true,
+      },
+    },
+},
+},{
+  pkg = {sources="lazy"}
 })
 
 
@@ -437,63 +450,6 @@ vim.keymap.set("n", "c-Left", ":resize -2<CR>", { noremap = true, silent = true 
 vim.keymap.set("n", "c-Right", ":resize +2<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "c-Up", ":vertical resize +2<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "c-Down", ":vertical resize -2<CR>", { noremap = true, silent = true })
-
--- require("which-key").register({
--- 	["leader"] = { "<cmd>Telescope buffers<cr>", "Buffers" },
---   w = { "<cmd>write<CR>", "Write" },
---   b = {
---     name="Buffer",
---     b = { "<cmd>BufDel<CR>", "Bye"},
---     a = { "<cmd>BufDelOthers<CR>", "Close All Others"},
---     j = { "<cmd>bnext<CR>", "Next"},
---     k = { "<cmd>bprevious<CR>", "Previous"},
---   },
--- 	e = {
---     name = "Explorer",
---     e = { "<cmd>Neotree filesystem reveal left<cr>", "Explorer" },
---     t = { "<cmd>Neotree filesystem reveal toggle left<cr>", "Explorer" },
---     b = { "<cmd>Neotree buffers reveal float<cr>", "Buffers" },
---   },
--- 	f = {
---     name = "Find",
---     f = { "<cmd>Telescope find_files<cr>", "Files" },
---     b = { "<cmd>Telescope buffers<cr>", "Buffers" },
---     -- g = { "<cmd>Telescope live_grep<cr>", "Grep" },
---     g = { require('telescope').extensions.live_grep_args.live_grep_args, "Grep" },
---     o = { "<cmd>Telescope oldfiles<cr>", "History" },
---     k = { "<cmd>Telescope keymaps<cr>", "Keymaps" },
---     r = { "<cmd>Telescope lsp_references<cr>", "References" },
---     d = { "<cmd>Telescope diagnostics bufnr=0<cr>", "Diagnostics" },
---   },
---   s = {
---     name = "Replace",
---     s = { require("spectre").toggle, "Toggle Spectre" },
---     w = { function() require("spectre").open_visual({select_word=true}) end, "Search Word", mode="n"},
---     p = { function() require("spectre").open_file_search({select_word=true}) end, "Search File", mode="n"},
---   },
--- 	l = { "<cmd>LazyGit<CR>", "LazyGit" },
--- 	c = {
--- 		name = "Code",
--- 		a = { vim.lsp.buf.code_action, "Code Action" },
---     h = { "<cmd>ClangdSwitchSourceHeader<CR>", "Header/Source" },
--- 		f = {
--- 			function()
--- 				require("conform").format({
--- 					lsp_fallback = true,
--- 					async = false,
--- 					timeout_ms = 1000,
--- 				})
--- 			end,
--- 			"Format",
--- 		},
--- 	},
--- 	p = {
--- 		name = "Packages",
--- 		l = { "<cmd>Lazy<cr>", "Lazy" },
--- 		m = { "<cmd>Mason<cr>", "Mason" },
--- 	},
--- }, { prefix = "<leader>" })
-
 
 require("which-key").add({
   { "<leader>b", group = "Buffer" },
@@ -532,4 +488,5 @@ require("which-key").add({
   { "<leader>ss", require("spectre").toggle, desc = "Toggle Spectre" },
   { "<leader>sw", function() require("spectre").open_visual({select_word=true}) end, desc = "Search Word" },
   { "<leader>w", "<cmd>write<CR>", desc = "Write" },
+  { "<leader>o", "<cmd>Outline<CR>", desc = "Outline" },
 })
